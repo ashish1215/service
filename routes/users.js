@@ -1,13 +1,43 @@
 var models  = require('../models');
 var express = require('express');
 var router  = express.Router();
+var md5 = require('md5');
 
 router.post('/create', function(req, res) {
-  models.User.create({
-    username: req.body.username
-  }).then(function() {
+  req.body['password'] = md5(req.body.password)
+  models.User.create(req.body).then(function() {
     res.redirect('/');
   });
+});
+
+router.post('/authenticate', async function(req, res) {
+  const password = md5(req.body.password)
+
+  return models.User.findOne({where: { username: req.body.username, password: password}}).then((response) =>{
+    if(response) {
+      return res.json(response)
+    } else {
+      throw new Error("Invalid Credentials")
+    }
+  }).catch((error) => {
+    return res.json("Invalid Credentails")
+  })
+  
+})
+
+router.post('/getValues', async function(req,res) {
+  let data = req.body;
+  let users = await models.User.findAll({
+    include:[{
+      model: models.Task
+    }],
+    where: {
+      username: 'Ashish'
+    } });
+  console.log(users);
+  let specificUser = await models.User.findAndCountAll({ where: { username: 'Ashish' }, limit: 5 });
+  
+  return res.json(specificUser);
 });
 
 router.get('/:user_id/destroy', function(req, res) {

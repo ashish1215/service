@@ -1,7 +1,10 @@
 module.exports = {
   development: {
-    dialect: "sqlite",
-    storage: "./db.development.sqlite"
+    dialect: 'mysql',
+    host: '127.0.0.1',
+    username: 'root',
+    password: 'password',
+    database: 'sys'
   },
   test: {
     dialect: "sqlite",
