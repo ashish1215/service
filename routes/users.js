@@ -17,10 +17,10 @@ router.post('/authenticate', async function(req, res) {
     if(response) {
       return res.json(response)
     } else {
-      throw new Error("Invalid Credentials")
+      throw new Error
     }
   }).catch((error) => {
-    return res.json("Invalid Credentails")
+    return res.status(404).send("Invalid Credentials")
   })
   
 })
