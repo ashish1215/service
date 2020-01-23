@@ -10,10 +10,12 @@ router.post('/create', function(req, res) {
   });
 });
 
+
+
 router.post('/authenticate', async function(req, res) {
   const password = md5(req.body.password)
 
-  return models.User.findOne({where: { username: req.body.username, password: password}}).then((response) =>{
+  return models.User.findOne({where: { username: req.body.username, password: password}, include:[{ model: models.Task}]}).then((response) =>{
     if(response) {
       return res.json(response)
     } else {
@@ -33,7 +35,7 @@ router.post('/getValues', async function(req,res) {
     }],
     where: {
       username: 'Ashish'
-    } });
+    } }); 
   console.log(users);
   let specificUser = await models.User.findAndCountAll({ where: { username: 'Ashish' }, limit: 5 });
   
